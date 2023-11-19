@@ -3,6 +3,9 @@ const path = require('path');
 const express = require('express')
 const expressApp = express();
 
+// constroller
+const {classify} = require('../src/controller/cohere/index');
+
 const public_folder_path = path.join(__dirname, '../frontend/dist');
 expressApp.use(express.static(public_folder_path));
 
@@ -26,6 +29,18 @@ expressApp.use((req, res, next)=>{
 
 expressApp.get("/test", (req,res)=>{
     return res.send("test successed");
+});
+
+expressApp.get("/classify", async (req,res)=>{
+    console.log(`classify body: ${req.body}`)
+    const textArray = req.body;
+    try {
+        const responses = await classify(textArray);
+        return res.send(responses);
+    } catch (error) {
+        console.log(`classify error: ${error}`);
+        return res.status(500);
+    }
 });
 
 expressApp.get('/*',  function(req, res, next) {
