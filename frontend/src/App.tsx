@@ -1,34 +1,42 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { AxiosError } from 'axios';
+
+import { ClassificationResult, ClassificationResultType, getClassifications } from './service/classify'
 import './App.css'
 
+import {Flex, Textarea, Button, Box} from '@chakra-ui/react'
+
+export type Classification = {input: string, isHateful: string, confidence: number};
+
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [text, setText] = useState('');
+  const [classifications, setClassifications] = useState<Classification[]>([]);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Flex w="100%" h="100vh" flexDirection="column">
+      <Textarea placeholder='Put your text' value={text} onChange={(e)=>{
+        setText(e.target.value);
+      }}/>
+      <Button onClick={()=>{
+        getClassifications(text.split(/[.\n]/)).then((res: ClassificationResult)=>{
+          if (res.type === ClassificationResultType.Success) {
+            const data = res.data as Classification[];
+            setClassifications(data);
+          } else if (res.type === ClassificationResultType.Error) {
+            const data = res.data as AxiosError;
+            console.log(data);
+          }
+        }).catch((err)=>{
+          console.log(err);
+        });
+      }}>Submit</Button>
+      {classifications.map((classification: Classification, index)=>{
+        return (<Box key={index}>
+          {classification.input}: {classification.isHateful? 'Hateful': 'Not hateful'} {classification.confidence}
+        </Box>)
+      })}
+    </Flex>
   )
 }
 
