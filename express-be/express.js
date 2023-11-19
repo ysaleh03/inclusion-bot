@@ -3,7 +3,7 @@ const path = require('path');
 const express = require('express')
 const expressApp = express();
 
-const public_folder_path = path.join(__dirname, '../public');
+const public_folder_path = path.join(__dirname, '../frontend/dist');
 expressApp.use(express.static(public_folder_path));
 
 expressApp.use((req, res, next)=>{
