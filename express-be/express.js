@@ -9,6 +9,8 @@ const {classify} = require('../src/controller/cohere/index');
 const public_folder_path = path.join(__dirname, '../frontend/dist');
 expressApp.use(express.static(public_folder_path));
 
+expressApp.use(express.json());
+
 expressApp.use((req, res, next)=>{
     const allowedOrigins = ["http://localhost:4200"];
     const origin = req.headers.origin;
@@ -32,7 +34,7 @@ expressApp.get("/test", (req,res)=>{
 });
 
 expressApp.get("/classify", async (req,res)=>{
-    console.log(`classify body: ${req.body}`)
+    console.log(req.body);
     const textArray = req.body;
     try {
         const responses = await classify(textArray);
