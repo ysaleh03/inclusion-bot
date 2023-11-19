@@ -1,6 +1,6 @@
 import axios from 'axios';
 
 export const client = axios.create({
-    baseURL: "/",
+    baseURL: "http://localhost:3000",
     timeout: 1000
 });

@@ -1,10 +1,12 @@
 import { useState } from 'react'
-import { getClassifications } from './service/classify'
+import { AxiosError } from 'axios';
+
+import { ClassificationResult, ClassificationResultType, getClassifications } from './service/classify'
 import './App.css'
 
 import {Flex, Textarea, Button, Box} from '@chakra-ui/react'
 
-type Classification = {message: string, classification: string};
+export type Classification = {input: string, isHateful: string, confidence: number};
 
 function App() {
 
@@ -17,15 +19,21 @@ function App() {
         setText(e.target.value);
       }}/>
       <Button onClick={()=>{
-        getClassifications(text.split('\n')).then((res: any)=>{
-          setClassifications(res.data);
-        }).catch((err: any)=>{
+        getClassifications(text.split(/[.\n]/)).then((res: ClassificationResult)=>{
+          if (res.type === ClassificationResultType.Success) {
+            const data = res.data as Classification[];
+            setClassifications(data);
+          } else if (res.type === ClassificationResultType.Error) {
+            const data = res.data as AxiosError;
+            console.log(data);
+          }
+        }).catch((err)=>{
           console.log(err);
         });
       }}>Submit</Button>
-      {classifications.map((classification: Classification)=>{
-        return (<Box>
-          {classification.message}: {classification.classification}
+      {classifications.map((classification: Classification, index)=>{
+        return (<Box key={index}>
+          {classification.input}: {classification.isHateful? 'Hateful': 'Not hateful'} {classification.confidence}
         </Box>)
       })}
     </Flex>
