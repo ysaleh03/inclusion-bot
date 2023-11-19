@@ -19,7 +19,7 @@ client.on(Events.MessageCreate, c => {
 	if (c.author.bot) return;
 
 	console.log(`${c.author}: ${c.content}`);
-	client.channels.cache.get(c.channelId).send(`${c.author}: ${c.content}`);
+	client.channels.cache.get(c.channelId).send(`${c.author} ${c.content}`);
 })
 
 // Log in to Discord with your client's token
