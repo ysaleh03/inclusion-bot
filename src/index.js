@@ -1,9 +1,10 @@
+const { Client, Events, GatewayIntentBits } = require('discord.js');
+
 const dotenv = require('dotenv');
 
 dotenv.config();
 
 // Require the necessary discord.js classes
-const { Client, Events, GatewayIntentBits } = require('discord.js');
 const { token } = process.env.DISCORD_TOKEN;
 
 // Create a new client instance
