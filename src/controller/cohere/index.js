@@ -42,6 +42,23 @@ async function classify(inputs) {
   }
 }
 
+function parseResponse(response) {
+  return {
+    isHateful: response.predictions[0] === "hate",
+    confident: response.confidence[0],
+  };
+}
+
+/*
+ *
+ */
+async function isHate(inputs) {
+  const responses = await classify(inputs);
+
+  return responses.classifications.map(parseResponse);
+}
+
 module.exports = {
   classify,
+  isHate,
 };
