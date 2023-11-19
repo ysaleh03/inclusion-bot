@@ -6,7 +6,7 @@ const expressApp = express();
 // constroller
 const {classify, isHate} = require('../src/controller/cohere/index');
 
-const public_folder_path = path.join(__dirname, '../frontend/dist');
+const public_folder_path = path.join(__dirname, '../frontend/stable-product');
 expressApp.use(express.static(public_folder_path));
 
 expressApp.use(express.json());
