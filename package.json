@@ -1,0 +1,22 @@
+{
+  "name": "inclusion-bot",
+  "version": "1.0.0",
+  "description": "HackCamp Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ysaleh03/inclusion-bot.git"
+  },
+  "author": "Youssef Saleh, Jade Piramide, Steve Ren",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ysaleh03/inclusion-bot/issues"
+  },
+  "homepage": "https://github.com/ysaleh03/inclusion-bot#readme",
+  "dependencies": {
+    "discord.js": "^14.14.1"
+  }
+}
