@@ -17,12 +17,14 @@ function App() {
   const [classifications, setClassifications] = useState<Classification[]>([]);
 
   return (
-    <Flex w="100%" h="100vh" flexDirection="column">
-      <Textarea placeholder='Put your text' value={text} onChange={(e) => {
+    <div style={{width:"100%", minHeight:"100vh"}} >
+      <Flex  flexDirection="column">
+      <Textarea h="50vh" placeholder='Put your text' value={text} onChange={(e) => {
         setText(e.target.value);
       }} />
       <Button onClick={() => {
         const textArray = text.split(/[.\n]/).filter((t) => t.length > 0);
+        console.log(textArray);
         getClassifications(textArray).then((res: ClassificationResult) => {
           if (res.type === ClassificationResultType.Success) {
             const data = res.data as Classification[];
@@ -36,7 +38,7 @@ function App() {
         });
       }}>Submit</Button>
 
-      <TableContainer>
+      <TableContainer overflow="auto">
         <Table variant='simple'>
           <Thead>
             <Tr bg="teal.200">
@@ -58,6 +60,7 @@ function App() {
         </Table>
       </TableContainer>
     </Flex>
+    </div>
   )
 }
 
