@@ -1,5 +1,4 @@
 const { Client, Events, GatewayIntentBits } = require('discord.js');
-
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -17,7 +16,7 @@ client.once(Events.ClientReady, async (c) => {
 
 client.on(Events.MessageCreate, async c => {
 	if (c.author.bot) return;
-
+  
 	console.log(`${c.author}: ${c.content}`);
 
     setTimeout(() => c.delete(), 100);
@@ -25,7 +24,6 @@ client.on(Events.MessageCreate, async c => {
     c.react('👍');
 
     c.author.send("you used bad word");
-    
 })
 
 // Log in to Discord with your client's token
