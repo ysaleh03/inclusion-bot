@@ -1,7 +1,7 @@
 const { Client, Events, GatewayIntentBits } = require('discord.js');
 const dotenv = require('dotenv');
 
-const { classify } = require('../src/controller/cohere/index.js')
+const {isHate} = require("../src/controller/cohere");
 
 dotenv.config();
 
@@ -20,16 +20,19 @@ client.on(Events.MessageCreate, async c => {
 	if (c.author.bot) return;
   
 	// console.log(`@${c.author.username}: ${c.content}`);
-    const res = await classify([c.content]);
+    const responses = await isHate([c.content]);
+    const res = responses[0];
 
-    if (res[0].predictions[0] === "toxic") {
-        c.react('👎');
-        c.author.send(`your message \`${c.content}\` was deleted for hate speech`);
-        // setTimeout(() => c.delete(), 100);
-        c.delete();
-        c.channel.send(`message was deleted for hate speech`);
+    if (res.isHateful) {
+        await Promise.all(
+            [
+                c.react('👎'),
+                c.author.send(`your message \`${c.content}\` was flagged for hate speech with ${(res.confidence * 100).toFixed(0)}% confidence`),
+                c.delete(),
+                c.channel.send(`message was deleted for hate speech`)]
+        );
     } else {
-        c.react('👍');
+        await c.react('👍');
     }
 })
 
