@@ -36,7 +36,7 @@ async function classify(inputs) {
       console.log("Timed out!");
       return err;
     } else if (err instanceof CohereError) {
-      console.err("Cohere error:");
+      console.log("Cohere error:",err);
       return err;
     }
   }

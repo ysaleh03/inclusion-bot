@@ -16,24 +16,28 @@ client.once(Events.ClientReady, async (c) => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
-client.on(Events.MessageCreate, async c => {
-	if (c.author.bot) return;
-  
-	// console.log(`@${c.author.username}: ${c.content}`);
+const handleHate = async (c) => {
+    if (c.author.bot) return;
+
+    // console.log(`@${c.author.username}: ${c.content}`);
     const responses = await isHate([c.content]);
     const res = responses[0];
 
     if (res.isHateful) {
-        await Promise.all(
-            [
-                c.react('👎'),
-                c.author.send(`your message \`${c.content}\` was flagged for hate speech with ${(res.confidence * 100).toFixed(0)}% confidence`),
-                c.delete(),
-                c.channel.send(`message was deleted for hate speech`)]
-        );
+        await c.author.send(`your message \`${c.content}\` was flagged for hate speech with ${(res.confidence * 100).toFixed(0)}% confidence`);
+        await c.delete();
+        await c.channel.send(`message was deleted for hate speech`);
     } else {
         await c.react('👍');
     }
+}
+
+client.on(Events.MessageCreate, async c => {
+    await handleHate(c);
+})
+
+client.on(Events.MessageUpdate, async (b, a) => {
+    await handleHate(a);
 })
 
 // Log in to Discord with your client's token
