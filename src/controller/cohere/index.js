@@ -24,13 +24,14 @@ function getExamples() {
 async function classify(inputs) {
   try {
     const response = await cohereClient.classify({
-      model: "small",
+      model: process.env.COHERE_TEXT_TO_LABEL_MODEL_KEY,
       inputs: inputs,
-      examples: getExamples(),
+      examples: [],
     });
 
     return response.classifications;
   } catch (err) {
+    console.log(err);
     if (err instanceof CohereTimeoutError) {
       console.log("Timed out!");
       return err;
@@ -41,6 +42,24 @@ async function classify(inputs) {
   }
 }
 
+function parseResponse(response) {
+  return {
+    input: response.input,
+    isHateful: response.predictions[0] === "hate",
+    confidence: response.confidences[0],
+  };
+}
+
+/*
+ *
+ */
+async function isHate(inputs) {
+  const responses = await classify(inputs);
+
+  return responses.map(parseResponse);
+}
+
 module.exports = {
   classify,
+  isHate,
 };
