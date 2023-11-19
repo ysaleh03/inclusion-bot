@@ -18,8 +18,8 @@ client.once(Events.ClientReady, c => {
 client.on(Events.MessageCreate, c => {
 	if (c.author.bot) return;
 
-	// console.log(`${c.author}: ${c.content}`);
-	c.reply(c.content);
+	console.log(`@${c.author.username}: ${c.content}`);
+	// c.author.send(`heyy`);
 })
 
 // Log in to Discord with your client's token
