@@ -21,9 +21,10 @@ client.on(Events.MessageCreate, async c => {
 
     setTimeout(() => c.delete(), 100);
     c.channel.send(`test: ${c.author} ${c.content}, message deleted`);
-    c.react('👍');
+    // c.react('👍');
 
-    c.author.send("you used bad word");
+    const violationReason = 'test reason';
+    c.author.send(`Your message <${c.content}> has deleted due to non-inclusive contents, the reason is [${violationReason}]`);
 })
 
 // Log in to Discord with your client's token
