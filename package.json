@@ -18,6 +18,7 @@
   "homepage": "https://github.com/ysaleh03/inclusion-bot#readme",
   "dependencies": {
     "discord.js": "^14.14.1",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "cohere-ai": "^7.4.0"
   }
 }
