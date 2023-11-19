@@ -4,25 +4,29 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-// Require the necessary discord.js classes
-const { Client, Events, GatewayIntentBits } = require('discord.js');
-const { token } = process.env.DISCORD_TOKEN;
+const { DISCORD_TOKEN } = process.env;
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
 // When the client is ready, run this code (only once)
 // We use 'c' for the event parameter to keep it separate from the already defined 'client'
-client.once(Events.ClientReady, c => {
+client.once(Events.ClientReady, async (c) => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
-client.on(Events.MessageCreate, c => {
+client.on(Events.MessageCreate, async c => {
 	if (c.author.bot) return;
 
 	console.log(`${c.author}: ${c.content}`);
-	client.channels.cache.get(c.channelId).send(`${c.author} ${c.content}`);
+
+    setTimeout(() => c.delete(), 100);
+    c.channel.send(`test: ${c.author} ${c.content}, message deleted`);
+    c.react('👍');
+
+    c.author.send("you used bad word");
+    
 })
 
 // Log in to Discord with your client's token
-client.login(token);
+client.login(DISCORD_TOKEN);
