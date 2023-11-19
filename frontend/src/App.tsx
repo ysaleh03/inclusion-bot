@@ -4,9 +4,12 @@ import { AxiosError } from 'axios';
 import { ClassificationResult, ClassificationResultType, getClassifications } from './service/classify'
 import './App.css'
 
-import {Flex, Textarea, Button, Box} from '@chakra-ui/react'
+import {
+  Flex, Textarea, Button, TableContainer,
+  Table, Th, Thead, Tr, Tbody, Td, Progress
+} from '@chakra-ui/react'
 
-export type Classification = {input: string, isHateful: string, confidence: number};
+export type Classification = { input: string, isHateful: string, confidence: number };
 
 function App() {
 
@@ -15,11 +18,12 @@ function App() {
 
   return (
     <Flex w="100%" h="100vh" flexDirection="column">
-      <Textarea placeholder='Put your text' value={text} onChange={(e)=>{
+      <Textarea placeholder='Put your text' value={text} onChange={(e) => {
         setText(e.target.value);
-      }}/>
-      <Button onClick={()=>{
-        getClassifications(text.split(/[.\n]/)).then((res: ClassificationResult)=>{
+      }} />
+      <Button onClick={() => {
+        const textArray = text.split(/[.\n]/).filter((t) => t.length > 0);
+        getClassifications(textArray).then((res: ClassificationResult) => {
           if (res.type === ClassificationResultType.Success) {
             const data = res.data as Classification[];
             setClassifications(data);
@@ -27,15 +31,32 @@ function App() {
             const data = res.data as AxiosError;
             console.log(data);
           }
-        }).catch((err)=>{
+        }).catch((err) => {
           console.log(err);
         });
       }}>Submit</Button>
-      {classifications.map((classification: Classification, index)=>{
-        return (<Box key={index}>
-          {classification.input}: {classification.isHateful? 'Hateful': 'Not hateful'} {classification.confidence}
-        </Box>)
-      })}
+
+      <TableContainer>
+        <Table variant='simple'>
+          <Thead>
+            <Tr bg="teal.200">
+              <Th>Text</Th>
+              <Th>Status</Th>
+              <Th>Confidence</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {classifications.map((classification: Classification, index) => {
+              return (<Tr key={index}>
+                <Td>{classification.input}</Td>
+                <Td>{classification.isHateful? "Hateful": "Good"}</Td>
+                <Td><Progress value={classification.confidence * 100} /></Td>
+              </Tr>);
+            })}
+
+          </Tbody>
+        </Table>
+      </TableContainer>
     </Flex>
   )
 }
