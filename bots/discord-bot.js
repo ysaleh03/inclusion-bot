@@ -1,6 +1,8 @@
 const { Client, Events, GatewayIntentBits } = require('discord.js');
 const dotenv = require('dotenv');
 
+const { classify } = require('../src/controller/cohere/index.js')
+
 dotenv.config();
 
 const { DISCORD_TOKEN } = process.env;
@@ -17,14 +19,17 @@ client.once(Events.ClientReady, async (c) => {
 client.on(Events.MessageCreate, async c => {
 	if (c.author.bot) return;
   
-	console.log(`${c.author}: ${c.content}`);
+	// console.log(`@${c.author.username}: ${c.content}`);
+    const res = await classify([c.content]);
 
-    setTimeout(() => c.delete(), 100);
-    c.channel.send(`test: ${c.author} ${c.content}, message deleted`);
-    // c.react('👍');
-
-    const violationReason = 'test reason';
-    c.author.send(`Your message <${c.content}> has deleted due to non-inclusive contents, the reason is [${violationReason}]`);
+    if (res[0].predictions[0] === "toxic") {
+        c.react('👎');
+        c.author.send(`your message \`${c.content}\` was deleted for hate speech`);
+        setTimeout(() => c.delete(), 100);
+        c.channel.send(`message was deleted for hate speech`);
+    } else {
+        c.react('👍');
+    }
 })
 
 // Log in to Discord with your client's token
