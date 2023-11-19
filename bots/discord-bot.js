@@ -25,7 +25,8 @@ client.on(Events.MessageCreate, async c => {
     if (res[0].predictions[0] === "toxic") {
         c.react('👎');
         c.author.send(`your message \`${c.content}\` was deleted for hate speech`);
-        setTimeout(() => c.delete(), 100);
+        // setTimeout(() => c.delete(), 100);
+        c.delete();
         c.channel.send(`message was deleted for hate speech`);
     } else {
         c.react('👍');
