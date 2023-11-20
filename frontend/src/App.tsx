@@ -41,6 +41,15 @@ function App() {
             console.log("data", data)
             if (Array.isArray(data)) {
               setClassifications(data);
+              if (data.every(d=> !d.isHateful)) {
+                toast({
+                  title: 'No Hate Speech Detected!',
+                  description: 'Your text is safe to use.',
+                  status: 'success',
+                  duration: 9000,
+                  isClosable: true,
+                })
+              }
             } else {
               toast(createErrorToast("Too much texts to handle 😭"));
             }
@@ -51,7 +60,7 @@ function App() {
             console.log(data);
           }
         }).catch((err) => {
-          toast(createErrorToast(err))
+          toast(createErrorToast(err));
         });
       }}>Submit</Button>
 
