@@ -9,7 +9,7 @@ import {
   Table, Th, Thead, Tr, Tbody, Td, Progress
 } from '@chakra-ui/react'
 
-export type Classification = { input: string, isHateful: string, confidence: number, type?: string, typeConfiedence?: number};
+export type Classification = { input: string, isHateful: string, confidence: number, type?: string, typeConfiedence?: number };
 
 function App() {
 
@@ -17,8 +17,7 @@ function App() {
   const [classifications, setClassifications] = useState<Classification[]>([]);
 
   return (
-    <div style={{width:"100%", minHeight:"100vh"}} >
-      <Flex  flexDirection="column">
+    <Flex style={{ width: "80vw", minHeight: "100vh" }} flexDirection="column" alignItems="stretch">
       <Textarea h="50vh" placeholder='Put your text' value={text} onChange={(e) => {
         setText(e.target.value);
       }} />
@@ -28,7 +27,7 @@ function App() {
         getClassifications(textArray).then((res: ClassificationResult) => {
           if (res.type === ClassificationResultType.Success) {
             const data = res.data as Classification[];
-            console.log(data)
+            console.log("data", data)
             setClassifications(data);
           } else if (res.type === ClassificationResultType.Error) {
             const data = res.data as AxiosError;
@@ -49,10 +48,10 @@ function App() {
             </Tr>
           </Thead>
           <Tbody>
-            {classifications.filter((c)=>c.isHateful).map((classification: Classification, index) => {
+            {classifications.filter((c) => c.isHateful).map((classification: Classification, index) => {
               return (<Tr key={index}>
                 <Td>{classification.input}</Td>
-                <Td>{classification.type == "notgiven" ? "Uncertain": classification.type}</Td>
+                <Td>{classification.type == "notgiven" ? "Uncertain" : classification.type}</Td>
                 <Td><Progress value={classification.confidence * 100} /></Td>
               </Tr>);
             })}
@@ -61,7 +60,6 @@ function App() {
         </Table>
       </TableContainer>
     </Flex>
-    </div>
   )
 }
 
