@@ -44,23 +44,31 @@ class CohereModel {
     const isHateful = response.predictions[0] === "hate";
 
     if (isHateful) {
-      const typeResponse = await this.client.classify({
-        model: this.modelType,
-        inputs: [response.input],
-        examples: [],
-      });
+      try {
+        const typeResponse = await this.client.classify({
+          model: this.modelType,
+          inputs: [response.input],
+          examples: [],
+        });
 
-      const typePrediction = typeResponse.classifications[0];
+        const typePrediction = typeResponse.classifications[0];
 
-      console.log(typePrediction);
-
-      return {
-        input: response.input,
-        isHateful: true,
-        confidence: response.confidences[0],
-        type: typePrediction.predictions[0],
-        typeConfidence: typePrediction.confidences[0],
-      };
+        return {
+          input: response.input,
+          isHateful: true,
+          confidence: response.confidences[0],
+          type: typePrediction.predictions[0],
+          typeConfidence: typePrediction.confidences[0],
+        };
+      } catch (err) {
+        if (err instanceof CohereTimeoutError) {
+          console.log(err);
+        } else if (err instanceof CohereError) {
+          console.log(err);
+        } else {
+          console.log(err);
+        }
+      }
     } else {
       return {
         input: response.input,

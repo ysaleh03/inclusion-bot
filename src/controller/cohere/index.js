@@ -1,7 +1,11 @@
 const { CohereModel } = require("./CohereModel");
 require("dotenv").config();
 
-const cohereClient = new CohereModel(process.env.COHERE_API_KEY, process.env.COHERE_TEXT_TO_LABEL_MODEL_KEY, "122b810a-32d2-41cc-b7e3-39235547598f-ft");
+const cohereClient = new CohereModel(
+  process.env.COHERE_API_KEY,
+  process.env.COHERE_TEXT_TO_LABEL_MODEL_KEY,
+  process.env.COHERE_TEXT_TO_TYPE_MODEL_KEY,
+);
 
 function classify(inputs) {
   return cohereClient.getClassifications(inputs);
