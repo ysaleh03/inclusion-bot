@@ -9,7 +9,7 @@ import {
   Table, Th, Thead, Tr, Tbody, Td, Progress
 } from '@chakra-ui/react'
 
-export type Classification = { input: string, isHateful: string, confidence: number };
+export type Classification = { input: string, isHateful: string, confidence: number, type?: string, typeConfiedence?: number};
 
 function App() {
 
@@ -28,6 +28,7 @@ function App() {
         getClassifications(textArray).then((res: ClassificationResult) => {
           if (res.type === ClassificationResultType.Success) {
             const data = res.data as Classification[];
+            console.log(data)
             setClassifications(data);
           } else if (res.type === ClassificationResultType.Error) {
             const data = res.data as AxiosError;
@@ -43,15 +44,15 @@ function App() {
           <Thead>
             <Tr bg="teal.200">
               <Th>Text</Th>
-              <Th>Status</Th>
+              <Th>Reason Why</Th>
               <Th>Confidence</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {classifications.map((classification: Classification, index) => {
+            {classifications.filter((c)=>c.isHateful).map((classification: Classification, index) => {
               return (<Tr key={index}>
                 <Td>{classification.input}</Td>
-                <Td>{classification.isHateful? "Hateful": "Good"}</Td>
+                <Td>{classification.type == "notgiven" ? "Uncertain": classification.type}</Td>
                 <Td><Progress value={classification.confidence * 100} /></Td>
               </Tr>);
             })}
