@@ -6,15 +6,26 @@ import './App.css'
 
 import {
   Flex, Textarea, Button, TableContainer,
-  Table, Th, Thead, Tr, Tbody, Td, Progress
+  Table, Th, Thead, Tr, Tbody, Td, Progress, useToast, UseToastOptions
 } from '@chakra-ui/react'
 
 export type Classification = { input: string, isHateful: string, confidence: number, type?: string, typeConfiedence?: number };
 
+function createErrorToast(des: string): UseToastOptions  {
+  return {
+    title: 'Error Encountered!',
+    description: des,
+    status: 'error',
+    duration: 9000,
+    isClosable: true,
+  }
+}
 function App() {
 
   const [text, setText] = useState('');
   const [classifications, setClassifications] = useState<Classification[]>([]);
+
+  const toast = useToast()
 
   return (
     <Flex style={{ width: "80vw", minHeight: "100vh" }} flexDirection="column" alignItems="stretch">
@@ -31,10 +42,12 @@ function App() {
             setClassifications(data);
           } else if (res.type === ClassificationResultType.Error) {
             const data = res.data as AxiosError;
+            toast(createErrorToast(data.message));
+
             console.log(data);
           }
         }).catch((err) => {
-          console.log(err);
+          toast(createErrorToast(err))
         });
       }}>Submit</Button>
 
