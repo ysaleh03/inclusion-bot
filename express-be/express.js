@@ -38,6 +38,7 @@ expressApp.post("/classify", async (req,res)=>{
     const textArray = req.body;
     try {
         const responses = await isHate(textArray);
+        console.log(responses);
         return res.send(responses);
     } catch (error) {
         console.log(`classify error: ${error}`);
