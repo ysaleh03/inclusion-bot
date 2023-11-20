@@ -4,7 +4,8 @@
   "description": "HackCamp Project",
   "main": "index.js",
   "scripts": {
-    "dev": "node bots/discord-bot.js",
+    "discord-bot": "node bots/discord-bot.js",
+    "express-server": "node express-be/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
