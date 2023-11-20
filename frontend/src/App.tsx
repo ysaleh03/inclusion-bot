@@ -5,8 +5,7 @@ import { ClassificationResult, ClassificationResultType, getClassifications } fr
 import './App.css'
 
 import {
-  Flex, Textarea, Button, TableContainer,
-  Table, Th, Thead, Tr, Tbody, Td, Progress, useToast, UseToastOptions
+  Flex, Textarea, Button, useToast, UseToastOptions, Code
 } from '@chakra-ui/react'
 
 export type Classification = { input: string, isHateful: string, confidence: number, type?: string, typeConfiedence?: number };
@@ -28,11 +27,11 @@ function App() {
   const toast = useToast()
 
   return (
-    <Flex style={{ width: "80vw", minHeight: "100vh" }} flexDirection="column" alignItems="stretch">
+    <Flex p="10" style={{ width: "80vw", minHeight: "80vh" }} flexDirection="column" alignItems="stretch">
       <Textarea h="50vh" placeholder='Put your text' value={text} onChange={(e) => {
         setText(e.target.value);
       }} />
-      <Button onClick={() => {
+      <Button mt="5" onClick={() => {
         const textArray = text.split(/[.\n]/).filter((t) => t.length > 0);
         console.log(textArray);
         getClassifications(textArray).then((res: ClassificationResult) => {
@@ -64,27 +63,13 @@ function App() {
         });
       }}>Submit</Button>
 
-      <TableContainer overflow="auto">
-        <Table variant='simple'>
-          <Thead>
-            <Tr bg="teal.200">
-              <Th>Text</Th>
-              <Th>Reason Why</Th>
-              <Th>Confidence</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {classifications.filter((c) => c.isHateful).map((classification: Classification, index) => {
-              return (<Tr key={index}>
-                <Td>{classification.input}</Td>
-                <Td>{classification.type == "notgiven" ? "Uncertain" : classification.type}</Td>
-                <Td><Progress value={classification.confidence * 100} /></Td>
-              </Tr>);
+      <div>
+        {classifications.filter((c) => c.isHateful).map((c) => {
+              return <p>
+                The string <Code colorScheme='red'>{c.input}</Code> was flagged as <Code colorScheme='red'>{c.type === "notgiven" ? "problematic" : c.type}</Code> with {(c.confidence * 100).toFixed(0)}% confidence.
+              </p>;
             })}
-
-          </Tbody>
-        </Table>
-      </TableContainer>
+      </div>
     </Flex>
   )
 }

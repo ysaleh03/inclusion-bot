@@ -1,6 +1,6 @@
-import { Classification } from '../App';
-import { client } from './client';
-import { AxiosError } from 'axios';
+import {Classification} from '../App';
+import {client} from './client';
+import {AxiosError} from 'axios';
 
 export enum ClassificationResultType {
     Success = 'success',
