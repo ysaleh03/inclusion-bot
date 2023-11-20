@@ -24,11 +24,11 @@ const handleHate = async (c) => {
     const res = responses[0];
 
     if (res.isHateful && res.confidence >= 0.7) {
-        await c.author.send(`your message \`${c.content}\` was flagged for hate speech with ${(res.confidence * 100).toFixed(0)}% confidence`);
+        const type = res.type === `notgiven` ? `` : `(${res.type})`;
+        await c.author.send(
+            `your message \`${c.content}\` was flagged for hate speech ${type} with ${(res.confidence * 100).toFixed(0)}% confidence`);
         await c.delete();
         await c.channel.send(`message was deleted for hate speech`);
-    } else {
-        await c.react('👍');
     }
 }
 
