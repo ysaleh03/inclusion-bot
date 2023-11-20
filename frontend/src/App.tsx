@@ -39,7 +39,11 @@ function App() {
           if (res.type === ClassificationResultType.Success) {
             const data = res.data as Classification[];
             console.log("data", data)
-            setClassifications(data);
+            if (Array.isArray(data)) {
+              setClassifications(data);
+            } else {
+              toast(createErrorToast("Too much texts to handle 😭"));
+            }
           } else if (res.type === ClassificationResultType.Error) {
             const data = res.data as AxiosError;
             toast(createErrorToast(data.message));
