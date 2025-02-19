@@ -20,7 +20,7 @@
   "homepage": "https://github.com/ysaleh03/inclusion-bot#readme",
   "dependencies": {
     "cohere-ai": "^7.8.0",
-    "discord.js": "^14.15.3",
+    "discord.js": "^14.18.0",
     "dotenv": "^16.3.1",
     "express": "^4.21.2"
   }
